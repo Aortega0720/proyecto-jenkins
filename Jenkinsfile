@@ -14,20 +14,20 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Instalando dependencias...'
-                sh 'pip install -r requirements.txt || true'
+                sh 'pip install -r requirements.txt'
             }
         }
 
         stage('Test') {
             steps {
                 echo 'Ejecutando pruebas...'
-                sh 'pytest tests/ || true'
+                sh 'pytest tests/'
             }
         }
 
         stage('Deploy Simulation') {
             steps {
-                echo 'Simulando deploy de la aplicación...'
+                echo 'Simulando deploy...'
                 sh 'echo "Aplicación iniciada (simulación)"'
             }
         }
@@ -39,7 +39,7 @@ pipeline {
             echo 'Pipeline ejecutado exitosamente'
         }
         failure {
-            echo 'El pipeline falló'
+            echo 'El pipeline falló. Revisar errores en consola.'
         }
     }
 }
