@@ -6,7 +6,7 @@ pipeline {
 
         stage('Checkout') {
             steps {
-                echo 'Clonando el repositorio...'
+                echo 'Clonando repositorio...'
                 git url: 'https://github.com/Aortega0720/proyecto-jenkins.git', branch: 'main'
             }
         }
@@ -38,17 +38,18 @@ pipeline {
         stage('Deploy Simulation') {
             steps {
                 echo 'Simulando despliegue...'
-                sh 'echo "Aplicación desplegada correctamente (simulación)"'
+                sh 'echo "Deploy simulado correctamente"'
             }
         }
+
     }
 
     post {
         success {
-            echo 'Pipeline ejecutado exitosamente'
+            echo 'Pipeline ejecutado correctamente'
         }
         failure {
-            echo 'Error en el pipeline'
+            echo 'El pipeline falló'
         }
     }
 }
