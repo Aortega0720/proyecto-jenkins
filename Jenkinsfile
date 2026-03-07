@@ -2,26 +2,23 @@ pipeline {
 
     agent any
 
-    environment {
-        REPO = 'https://github.com/Aortega0720/proyecto-jenkins.git'
-        BRANCH = 'main'
-    }
-
     stages {
 
         stage('Checkout') {
             steps {
                 echo 'Clonando el repositorio...'
-                git url: "${REPO}", branch: "${BRANCH}"
+                git url: 'https://github.com/Aortega0720/proyecto-jenkins.git', branch: 'main'
             }
         }
 
         stage('Build') {
             steps {
-                echo 'Instalando dependencias...'
+                echo 'Instalando dependencias con Docker Python...'
                 sh '''
-                    python3 -m venv venv
-                    . venv/bin/activate
+                    docker run --rm \
+                    -v $(pwd):/app \
+                    -w /app \
+                    python:3.10 \
                     pip install -r requirements.txt
                 '''
             }
@@ -31,7 +28,10 @@ pipeline {
             steps {
                 echo 'Ejecutando pruebas...'
                 sh '''
-                    . venv/bin/activate
+                    docker run --rm \
+                    -v $(pwd):/app \
+                    -w /app \
+                    python:3.10 \
                     pytest
                 '''
             }
@@ -40,9 +40,7 @@ pipeline {
         stage('Deploy Simulation') {
             steps {
                 echo 'Simulando despliegue...'
-                sh '''
-                    echo "Aplicación desplegada en entorno simulado"
-                '''
+                sh 'echo "Aplicación desplegada (simulación)"'
             }
         }
 
