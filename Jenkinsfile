@@ -1,33 +1,48 @@
 pipeline {
+
     agent any
+
+    environment {
+        REPO = 'https://github.com/Aortega0720/proyecto-jenkins.git'
+        BRANCH = 'main'
+    }
 
     stages {
 
         stage('Checkout') {
             steps {
-                echo 'Clonando el repositorio desde GitHub...'
-                git url: 'https://github.com/Aortega0720/proyecto-jenkins.git', branch: 'main'
+                echo 'Clonando el repositorio...'
+                git url: "${REPO}", branch: "${BRANCH}"
             }
         }
 
         stage('Build') {
             steps {
-                echo 'Construyendo la aplicación...'
-                sh 'echo "Build completado"'
+                echo 'Instalando dependencias...'
+                sh '''
+                    python3 -m venv venv
+                    . venv/bin/activate
+                    pip install -r requirements.txt
+                '''
             }
         }
 
         stage('Test') {
             steps {
                 echo 'Ejecutando pruebas...'
-                sh 'echo "Tests ejecutados correctamente"'
+                sh '''
+                    . venv/bin/activate
+                    pytest
+                '''
             }
         }
 
         stage('Deploy Simulation') {
             steps {
                 echo 'Simulando despliegue...'
-                sh 'echo "Aplicación desplegada (simulación)"'
+                sh '''
+                    echo "Aplicación desplegada en entorno simulado"
+                '''
             }
         }
 
@@ -35,10 +50,10 @@ pipeline {
 
     post {
         success {
-            echo 'Pipeline ejecutado exitosamente'
+            echo 'Pipeline ejecutado correctamente'
         }
         failure {
-            echo 'El pipeline falló'
+            echo 'Error en el pipeline'
         }
     }
 
