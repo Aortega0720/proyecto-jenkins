@@ -12,47 +12,43 @@ pipeline {
         }
 
         stage('Build') {
+            agent {
+                docker {
+                    image 'python:3.10'
+                }
+            }
             steps {
-                echo 'Instalando dependencias con Docker Python...'
-                sh '''
-                    docker run --rm \
-                    -v $(pwd):/app \
-                    -w /app \
-                    python:3.10 \
-                    pip install -r requirements.txt
-                '''
+                echo 'Instalando dependencias...'
+                sh 'pip install -r requirements.txt'
             }
         }
 
         stage('Test') {
+            agent {
+                docker {
+                    image 'python:3.10'
+                }
+            }
             steps {
                 echo 'Ejecutando pruebas...'
-                sh '''
-                    docker run --rm \
-                    -v $(pwd):/app \
-                    -w /app \
-                    python:3.10 \
-                    pytest
-                '''
+                sh 'pytest'
             }
         }
 
         stage('Deploy Simulation') {
             steps {
                 echo 'Simulando despliegue...'
-                sh 'echo "Aplicación desplegada (simulación)"'
+                sh 'echo "Aplicación desplegada correctamente (simulación)"'
             }
         }
-
     }
 
     post {
         success {
-            echo 'Pipeline ejecutado correctamente'
+            echo 'Pipeline ejecutado exitosamente'
         }
         failure {
             echo 'Error en el pipeline'
         }
     }
-
 }
