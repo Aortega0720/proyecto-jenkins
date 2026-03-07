@@ -13,10 +13,12 @@ pipeline {
 
         stage('Build') {
             steps {
-                echo 'Instalando dependencias...'
+                echo 'Instalando dependencias en contenedor Python...'
                 sh '''
-                python3 -m venv venv
-                . venv/bin/activate
+                docker run --rm \
+                -v $(pwd):/app \
+                -w /app \
+                python:3.10 \
                 pip install -r requirements.txt
                 '''
             }
@@ -26,7 +28,10 @@ pipeline {
             steps {
                 echo 'Ejecutando pruebas con pytest...'
                 sh '''
-                . venv/bin/activate
+                docker run --rm \
+                -v $(pwd):/app \
+                -w /app \
+                python:3.10 \
                 pytest tests/
                 '''
             }
@@ -34,7 +39,7 @@ pipeline {
 
         stage('Deploy Simulation') {
             steps {
-                echo 'Simulando despliegue de la aplicación...'
+                echo 'Simulando despliegue...'
                 sh 'echo "Deploy simulado correctamente"'
             }
         }
