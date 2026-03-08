@@ -6,20 +6,22 @@ pipeline {
 
         stage('Checkout') {
             steps {
+                echo 'Clonando repositorio...'
                 deleteDir()
                 git url: 'https://github.com/Aortega0720/proyecto-jenkins.git', branch: 'main'
+                sh 'ls -la'
             }
         }
 
         stage('Build') {
             steps {
-                echo 'Instalando dependencias con Python en Docker...'
+                echo 'Instalando dependencias en contenedor Python...'
                 sh '''
                 docker run --rm \
-                -v $PWD:/app \
+                -v $(pwd):/app \
                 -w /app \
                 python:3.10 \
-                pip install -r requirements.txt
+                bash -c "ls -la && pip install -r requirements.txt"
                 '''
             }
         }
@@ -29,7 +31,7 @@ pipeline {
                 echo 'Ejecutando pruebas con pytest...'
                 sh '''
                 docker run --rm \
-                -v $PWD:/app \
+                -v $(pwd):/app \
                 -w /app \
                 python:3.10 \
                 pytest tests/
