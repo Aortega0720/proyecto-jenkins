@@ -18,7 +18,7 @@ pipeline {
                 echo 'Instalando dependencias...'
                 sh '''
                 docker run --rm \
-                -v $(pwd):/app \
+                -v $WORKSPACE:/app \
                 -w /app \
                 python:3.10 \
                 bash -c "ls -la && pip install -r requirements.txt"
@@ -31,7 +31,7 @@ pipeline {
                 echo 'Ejecutando pruebas...'
                 sh '''
                 docker run --rm \
-                -v $(pwd):/app \
+                -v $WORKSPACE:/app \
                 -w /app \
                 python:3.10 \
                 bash -c "pytest tests/"
