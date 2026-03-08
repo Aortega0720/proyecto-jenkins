@@ -6,7 +6,7 @@ pipeline {
 
         stage('Checkout') {
             steps {
-                echo 'Clonando el repositorio...'
+                deleteDir()
                 git url: 'https://github.com/Aortega0720/proyecto-jenkins.git', branch: 'main'
             }
         }
