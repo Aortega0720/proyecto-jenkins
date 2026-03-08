@@ -15,7 +15,7 @@ pipeline {
 
         stage('Build') {
             steps {
-                echo 'Instalando dependencias en contenedor Python...'
+                echo 'Instalando dependencias...'
                 sh '''
                 docker run --rm \
                 -v $(pwd):/app \
@@ -28,21 +28,21 @@ pipeline {
 
         stage('Test') {
             steps {
-                echo 'Ejecutando pruebas con pytest...'
+                echo 'Ejecutando pruebas...'
                 sh '''
                 docker run --rm \
                 -v $(pwd):/app \
                 -w /app \
                 python:3.10 \
-                pytest tests/
+                bash -c "pytest tests/"
                 '''
             }
         }
 
         stage('Deploy Simulation') {
             steps {
-                echo 'Simulando despliegue...'
-                sh 'echo "Aplicación desplegada correctamente (simulación)"'
+                echo 'Simulando deploy...'
+                sh 'echo "Aplicación iniciada (simulación)"'
             }
         }
 
