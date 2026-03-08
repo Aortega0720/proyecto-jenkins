@@ -13,36 +13,24 @@ pipeline {
             }
         }
 
-        stage('Build') {
+        stage('Build Image') {
             steps {
-                echo 'Instalando dependencias...'
-                sh '''
-                docker run --rm \
-                -v $WORKSPACE:/app \
-                -w /app \
-                python:3.10 \
-                bash -c "ls -la && pip install -r requirements.txt"
-                '''
+                echo 'Construyendo imagen Docker...'
+                sh 'docker build -t fastapi-jenkins .'
             }
         }
 
         stage('Test') {
             steps {
                 echo 'Ejecutando pruebas...'
-                sh '''
-                docker run --rm \
-                -v $WORKSPACE:/app \
-                -w /app \
-                python:3.10 \
-                bash -c "pytest tests/"
-                '''
+                sh 'docker run --rm fastapi-jenkins pytest tests/'
             }
         }
 
         stage('Deploy Simulation') {
             steps {
-                echo 'Simulando deploy...'
-                sh 'echo "Aplicación iniciada (simulación)"'
+                echo 'Simulando despliegue...'
+                sh 'docker run -d -p 8000:8000 fastapi-jenkins'
             }
         }
 
