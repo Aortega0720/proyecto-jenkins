@@ -13,22 +13,34 @@ pipeline {
 
         stage('Build') {
             steps {
-                echo 'Instalando dependencias...'
-                sh 'pip install -r requirements.txt'
+                echo 'Instalando dependencias con Python en Docker...'
+                sh '''
+                docker run --rm \
+                -v $PWD:/app \
+                -w /app \
+                python:3.10 \
+                pip install -r requirements.txt
+                '''
             }
         }
 
         stage('Test') {
             steps {
-                echo 'Ejecutando pruebas...'
-                sh 'pytest tests/'
+                echo 'Ejecutando pruebas con pytest...'
+                sh '''
+                docker run --rm \
+                -v $PWD:/app \
+                -w /app \
+                python:3.10 \
+                pytest tests/
+                '''
             }
         }
 
         stage('Deploy Simulation') {
             steps {
-                echo 'Simulando deploy...'
-                sh 'echo "Aplicación iniciada (simulación)"'
+                echo 'Simulando despliegue...'
+                sh 'echo "Aplicación desplegada correctamente (simulación)"'
             }
         }
 
